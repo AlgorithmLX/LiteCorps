@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "${id}",
+  "version": "${version}",
+  "name": "${name}",
+  "description": "${description}",
+  "authors": [ "AlgorithmLX" ],
+  "contact": {
+    "issues": "https://github.com/AlgorithmLX/${name}/issues",
+    "sources": "https://github.com/AlgorithmLX/${name}/"
+  },
+  "icon": "logo.png",
+  "license": "All-Rights-Reserved",
+  "environment": "*",
+  "depends": {
+    "fabricloader": ">=${fabric_loader}",
+    "minecraft": "~${minecraftVersion}",
+    "java": ">=${java_version}",
+    "fabric-api": ">=${fabric_api}",
+    "fabric-language-kotlin": ">=${flk_version}"
+  },
+  "mixins": [ "litecorps.mixins.json" ],
+  "entrypoints": {
+    "main": [
+      {
+        "adapter": "kotlin",
+        "value": "com.algorithmlx.litecorps.Mod::onInitialize"
+      }
+    ],
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "com.algorithmlx.litecorps.Mod::onInitializeClient"
+      }
+    ]
+  }
+}
