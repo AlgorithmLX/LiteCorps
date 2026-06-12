@@ -63,7 +63,7 @@ publishMods {
         return@publishMods
     }
 
-    changelog = rootProject.file("CHANGELOG.md").readText()
+    //changelog = rootProject.file("CHANGELOG.md").readText()
 
     displayName = "[${mod.loader}-${mod.minecraftVersion}] ${mod.name} (v.${mod.version})"
     version = "${mod.version}+mc${mod.minecraftVersion}"
