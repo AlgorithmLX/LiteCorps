@@ -36,11 +36,11 @@ public abstract class PlayerMixin {
 
     @Inject(method = "dropEquipment", at = @At("HEAD"), cancellable = true)
     //$ if >1.21.1 'private void dropEquipment(ServerLevel level, CallbackInfo ci) {' else 'private void dropEquipment(CallbackInfo ci) {'
-    private void dropEquipment(CallbackInfo ci) {
+    private void dropEquipment(ServerLevel level, CallbackInfo ci) {
         var player = (ServerPlayer) (Object) this;
         var inv = this.getInventory();
         //? if <1.21.11
-        var level = player.serverLevel();
+        //var level = player.serverLevel();
 
         List<ItemStack> armor = new ArrayList<>();
         boolean hasArmor = false;
@@ -116,7 +116,7 @@ public abstract class PlayerMixin {
             while (
                     basePos.getY() <
                             //$ if >1.21.1 'level.getMaxY()' else 'level.getMaxBuildHeight()'
-                            level.getMaxBuildHeight()
+                            level.getMaxY()
                             && !level.isEmptyBlock(basePos)) {
                 basePos = basePos.above();
             }
@@ -124,7 +124,7 @@ public abstract class PlayerMixin {
 
         if (basePos.getY() <
                 //$ if >1.21.1 'level.getMaxY()' else 'level.getMaxBuildHeight()'
-                level.getMaxBuildHeight()
+                level.getMaxY()
         ) {
             basePos = litecorps$findNearestIsland(level, basePos);
         }
@@ -140,7 +140,7 @@ public abstract class PlayerMixin {
         if (level.getBlockState(basePos).is(Blocks.LAVA) || level.getBlockState(basePos.below()).is(Blocks.LAVA)) {
             while ((level.getBlockState(basePos).is(Blocks.LAVA) || level.getBlockState(basePos.below()).is(Blocks.LAVA)) && basePos.getY() <
                     //$ if >1.21.1 'level.getMaxY()' else 'level.getMaxBuildHeight()'
-                    level.getMaxBuildHeight()
+                    level.getMaxY()
             ) {
                 basePos = basePos.above();
             }
@@ -197,7 +197,7 @@ public abstract class PlayerMixin {
 
         while (extraIndex < extraItems.size() && currentPos.getY() <=
                 //$ if >1.21.1 'level.getMaxY()' else 'level.getMaxBuildHeight()'
-                level.getMaxBuildHeight()
+                level.getMaxY()
         ) {
             int remaining = extraItems.size() - extraIndex;
             boolean needDouble = remaining > 27;
@@ -249,7 +249,7 @@ public abstract class PlayerMixin {
                         var topPos = level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, new BlockPos(center.getX() + x, 0, center.getZ() + z));
                         if (topPos.getY() >
                                 //$ if >1.21.1 'level.getMaxY()' else 'level.getMaxBuildHeight()'
-                                level.getMaxBuildHeight()
+                                level.getMaxY()
                         ) {
                             return topPos;
                         }
@@ -279,7 +279,7 @@ public abstract class PlayerMixin {
 
                             if (isSafe && checkPos.getY() <=
                                     //$ if >1.21.1 'level.getMaxY()' else 'level.getMaxBuildHeight()'
-                                    level.getMaxBuildHeight()
+                                    level.getMaxY()
                             ) {
                                 return checkPos;
                             }

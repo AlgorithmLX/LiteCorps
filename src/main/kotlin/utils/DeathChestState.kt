@@ -3,16 +3,16 @@ package com.algorithmlx.litecorps.utils
 import com.algorithmlx.litecorps.ModId
 import net.minecraft.core.BlockPos
 //? if <1.21.11 {
-import net.minecraft.core.HolderLookup
+/*import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
-//?} else {
-/*import com.mojang.serialization.codecs.RecordCodecBuilder
+*///?} else {
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.core.UUIDUtil
 import net.minecraft.world.level.saveddata.SavedDataType
 import java.util.stream.Collectors
-*///?}
+//?}
 import net.minecraft.util.datafix.DataFixTypes
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.Level
@@ -20,7 +20,7 @@ import net.minecraft.world.level.saveddata.SavedData
 import java.util.UUID
 
 //$ if >1.21.1 'class DeathChestState(entries: List<ChestEntry>, pendingEntries: List<PendingEntry>): SavedData() {' else 'class DeathChestState: SavedData() {'
-class DeathChestState: SavedData() {
+class DeathChestState(entries: List<ChestEntry>, pendingEntries: List<PendingEntry>): SavedData() {
     private val chests = hashMapOf<BlockPos, UUID>()
     private val pending = hashMapOf<UUID, BlockPos>()
 
@@ -49,7 +49,7 @@ class DeathChestState: SavedData() {
     }
 
     //? if >=1.21.11 {
-    /*constructor(): this(listOf(), listOf())
+    constructor(): this(listOf(), listOf())
     init {
         entries.forEach { (pos, owner) -> this.chests[pos] = owner }
         pendingEntries.forEach { (pos, owner) -> this.pending[owner] = pos }
@@ -88,10 +88,10 @@ class DeathChestState: SavedData() {
     fun getPendingEntries(): List<PendingEntry> = chests.entries.stream()
         .map { PendingEntry(it.key, it.value) }
         .collect(Collectors.toList())
-     *///?}
+     //?}
 
     //? if <1.21.11 {
-    override fun save(
+    /*override fun save(
         tag: CompoundTag,
         provider: HolderLookup.Provider
     ): CompoundTag {
@@ -109,11 +109,11 @@ class DeathChestState: SavedData() {
 
         return tag
     }
-    //?}
+    *///?}
 
     companion object {
         //? if <1.21.11 {
-        @JvmStatic
+        /*@JvmStatic
         private fun load(tag: CompoundTag): DeathChestState {
             val state = DeathChestState()
             val list = tag.getList("DeathChests", Tag.TAG_COMPOUND.toInt())
@@ -127,16 +127,8 @@ class DeathChestState: SavedData() {
 
             return state
         }
-
-        @JvmStatic
-        fun get(level: Level): DeathChestState {
-            if (level.isClientSide) throw IllegalArgumentException()
-            return (level as ServerLevel).server.overworld().dataStorage
-                //$ if >1.21.1 '.computeIfAbsent(TYPE)' else '.computeIfAbsent(Factory(::DeathChestState, { tag, _ -> load(tag) }, DataFixTypes.LEVEL), ModId)'
-                .computeIfAbsent(Factory(::DeathChestState, { tag, _ -> load(tag) }, DataFixTypes.LEVEL), ModId)
-        }
-        //?} else {
-        /*@JvmField
+        *///?} else {
+        @JvmField
         val CODEC = RecordCodecBuilder.create { instance -> instance.group(
             ChestEntry.CODEC.listOf().fieldOf("chests").forGetter(DeathChestState::getEntries),
             PendingEntry.CODEC.listOf().fieldOf("pending").forGetter(DeathChestState::getPendingEntries)
@@ -146,6 +138,13 @@ class DeathChestState: SavedData() {
         val TYPE =
             //$ if 1.21.11 'SavedDataType("$ModId:chests", ::DeathChestState, CODEC, DataFixTypes.LEVEL)' else 'SavedDataType(ResLoc.parse("$ModId:chests"), ::DeathChestState, CODEC, DataFixTypes.LEVEL)'
             SavedDataType(ResLoc.parse("$ModId:chests"), ::DeathChestState, CODEC, DataFixTypes.LEVEL)
-        *///?}
+        //?}
+        @JvmStatic
+        fun get(level: Level): DeathChestState {
+            if (level.isClientSide) throw IllegalArgumentException()
+            return (level as ServerLevel).server.overworld().dataStorage
+                //$ if >1.21.1 '.computeIfAbsent(TYPE)' else '.computeIfAbsent(Factory(::DeathChestState, { tag, _ -> load(tag) }, DataFixTypes.LEVEL), ModId)'
+                .computeIfAbsent(TYPE)
+        }
     }
 }

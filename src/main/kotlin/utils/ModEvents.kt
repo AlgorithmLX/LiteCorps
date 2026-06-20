@@ -11,7 +11,8 @@ import net.minecraft.world.phys.HitResult
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.event.entity.player.PlayerEvent
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent
-import net.neoforged.neoforge.event.level.BlockEvent
+//$ if <26.2.0 'import net.neoforged.neoforge.event.level.BlockEvent' else 'import net.neoforged.neoforge.event.level.block.BreakBlockEvent'
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent
 *///?}
 import net.minecraft.core.BlockPos
 import net.minecraft.core.component.DataComponents
@@ -52,9 +53,9 @@ fun initEvents() {
                 if (owner != null) {
                     if (owner != player.uuid) {
                         //? if <=1.21.11 {
-                        player.displayClientMessage(Component.translatable("subtitles.block.chest.locked"), true)
-                        //?} else
-                        //player.sendOverlayMessage(Component.translatable("subtitles.block.chest.locked"))
+                        /*player.displayClientMessage(Component.translatable("subtitles.block.chest.locked"), true)
+                        *///?} else
+                        player.sendOverlayMessage(Component.translatable("subtitles.block.chest.locked"))
                         return@register InteractionResult.FAIL
                     } else {
                         removeDeathNote(player)
@@ -94,9 +95,9 @@ fun initEvents() {
             if (owner != null) {
                 if (owner != player.uuid) {
                     //? if <=1.21.11 {
-                    player.displayClientMessage(Component.translatable("subtitles.block.chest.locked"), true)
-                    //?} else
-                    //player.sendOverlayMessage(Component.translatable("subtitles.block.chest.locked"))
+                    /*player.displayClientMessage(Component.translatable("subtitles.block.chest.locked"), true)
+                    *///?} else
+                    player.sendOverlayMessage(Component.translatable("subtitles.block.chest.locked"))
                     return@register false
                 }
 
@@ -140,11 +141,10 @@ fun initEvents() {
             if (owner != null) {
                 if (owner != player.uuid) {
                     //? if <=1.21.11 {
-                    */
-/*player.displayClientMessage(Component.translatable("subtitles.block.chest.locked"), true)
-                    *//*
-//?} else
+                    /*player.displayClientMessage(Component.translatable("subtitles.block.chest.locked"), true)
+                    *///?} else {
                     player.sendOverlayMessage(Component.translatable("subtitles.block.chest.locked"))
+                    //?}
                     it.cancellationResult = InteractionResult.FAIL
                 } else {
                     removeDeathNote(player)
@@ -176,7 +176,8 @@ fun initEvents() {
         }
     }
 
-    bus.addListener<BlockEvent.BreakEvent> {
+    //$ if <26.2.0 ' bus.addListener<BlockEvent.BreakEvent> {' else 'bus.addListener<BreakBlockEvent> {'
+    bus.addListener<BreakBlockEvent> {
         val level = it.level as Level
         val pos = it.pos
         val state = it.state
@@ -186,11 +187,10 @@ fun initEvents() {
             if (owner != null) {
                 if (owner != player.uuid) {
                     //? if <=1.21.11 {
-                    */
-/*player.displayClientMessage(Component.translatable("subtitles.block.chest.locked"), true)
-                    *//*
-//?} else
+                    /*player.displayClientMessage(Component.translatable("subtitles.block.chest.locked"), true)
+                    *///?} else {
                     player.sendOverlayMessage(Component.translatable("subtitles.block.chest.locked"))
+                    //?}
                     it.isCanceled = true
                 }
 

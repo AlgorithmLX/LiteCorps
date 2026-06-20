@@ -4,7 +4,7 @@ import com.algorithmlx.litecorps.utils.DeathChestState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 //? if >1.21.1
-/*import net.minecraft.world.entity.ContainerUser;*/
+import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChestBlock;
@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ChestBlockEntityMixin {
     @Inject(method = "stopOpen", at = @At("TAIL"))
     //$ if >1.21.1 'private void stopOpen(ContainerUser containerUser, CallbackInfo ci) {' else 'private void stopOpen(Player player, CallbackInfo ci) {'
-    private void stopOpen(Player player, CallbackInfo ci) {
+    private void stopOpen(ContainerUser containerUser, CallbackInfo ci) {
         var chest = (ChestBlockEntity) (Object) this;
         var level = chest.getLevel();
 
